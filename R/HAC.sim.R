@@ -102,7 +102,7 @@ HAC.sim <- function(N,
       stop("H* must be greater than 1")
     }
   
-    if (sum(probs) != 1) {
+    if (!isTRUE(all.equal(1, sum(probs), tolerance = .Machine$double.eps^0.25))) {
       stop("probs must sum to 1")
     }
   

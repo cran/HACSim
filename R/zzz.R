@@ -5,8 +5,8 @@ envr <- NULL
 }
 
 .onAttach <- function(...) {
-  packageStartupMessage("This is HACSim 1.0.0 \n
+  packageStartupMessage("This is HACSim 1.0.1 \n
 Type ?HACHypothetical to see how to set up objects to run \n simulations of haplotype accumulation for hypothetical species \n 
 Type ?HACReal to see how to set up objects to run \n simulations of haplotype accumulation for real species \n 
-Type ?HAC.sim to see how run simulations of haplotype \n accumulation curves")
+Type ?HAC.simrep to see how to run simulations of haplotype \n accumulation curves")
 }

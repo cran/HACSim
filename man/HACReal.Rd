@@ -11,13 +11,13 @@ subsample = FALSE, prop = NULL, progress = TRUE, filename = NULL)}
 \arguments{\item{perms}{Number of permutations (replications)}
 \item{p}{Proportion of haplotypes to recover}
 \item{conf.level}{Desired confidence level for gaphical output and interval estimation}
-\item{subsample}{Is a subsample of DNA sequences desired (TRUE/FALSE)?}
+\item{subsample}{Is a subsample of DNA sequences desired?}
 \item{prop}{If subsample = TRUE, the proportion of DNA sequences to subsample}
-\item{progress}{Should iteration output be printed to the R console? Default is TRUE.}
+\item{progress}{Should iteration output be printed to the R console?}
 \item{filename}{Name of file where simulation results are to be saved}
 }
 
-\value{An object with 12 elements that can be passed to HAC.simrep()
+\value{An object with 13 elements that can be passed to \code{HAC.simrep}
 }
 
 \examples{
