@@ -5,7 +5,7 @@
 \packageTitle{HACSim}
 }
 \description{
-HACSim (\strong{H}aplotype \strong{A}ccumulation \strong{C}urve \strong{Sim}ulator) employs a novel nonparametric stochastic (Monte Carlo) optimization method of iteratively generating species' haplotype accumulation curves through extrapolation to assess sampling completeness based on the approach outlined in Phillips et al. (2015) <doi:10.1515/dna-2015-0008> and Phillips et al. (2019) <doi:10.1002/ece3.4757>. The package outputs a number of useful summary statistics of sampling coverage ("Measures of Sampling Closeness"), including an estimate of the likely required sample size (along with desired level confidence intervals) necessary to recover a given number/proportion of observed unique species' haplotypes. 
+HACSim (\strong{H}aplotype \strong{A}ccumulation \strong{C}urve \strong{Sim}ulator) employs a novel nonparametric stochastic (Monte Carlo) optimization method of iteratively generating species' haplotype accumulation curves through extrapolation to assess sampling completeness based on the approach outlined in Phillips et al. (2015) <doi:10.1515/dna-2015-0008> and Phillips et al. (2019) <doi:10.1002/ece3.4757>.  Any genomic marker can be targeted to assess likely required specimen sample sizes. The method is well-suited to assess sampling sufficiency for DNA barcoding initiatives. The package outputs a number of useful summary statistics of sampling coverage ("Measures of Sampling Closeness"), including an estimate of the likely required sample size (along with desired level confidence intervals) necessary to recover a given number/proportion of observed unique species' haplotypes. 
 }
 \details{
 

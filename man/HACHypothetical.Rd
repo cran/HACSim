@@ -14,7 +14,7 @@ progress = TRUE, filename = NULL)}
 \item{probs}{Haplotype frequency distribution vector}
 \item{perms}{Number of permutations (replications)}
 \item{p}{Proportion of haplotypes to recover}
-\item{conf.level}{Desired confidence level for gaphical output and interval estimation}
+\item{conf.level}{Desired confidence level for graphical output and interval estimation}
 \item{subsample}{Is a subsample of haplotype labels desired?}
 \item{prop}{If subsample = TRUE, the proportion of haplotype labels to subsample}
 \item{progress}{Should iteration output be printed to the R console?}

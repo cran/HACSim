@@ -23,7 +23,7 @@
 \item{probs}{Haplotype frequency distribution vector}
 \item{progress}{Should iteration results be outputted to the console? Default is TRUE.}
 \item{prop.haps}{If \code{subset.haps} = TRUE, the user-specified proportion of haplotype labels to recover}
-\item{prop.seqs}{If \code{subset.seqs} = TRUE, the user-specified proportion of DNA sequencess to recover}
+\item{prop.seqs}{If \code{subset.seqs} = TRUE, the user-specified proportion of DNA sequences to recover}
 \item{ptm}{A timer to track progress of the algorithm in seconds}
 \item{R}{The proportion of haplotypes recovered by the algorithm}
 \item{subset.haps}{Should a subsample of haplotype labels be taken? Default is FALSE.}
