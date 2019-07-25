@@ -21,7 +21,21 @@ progress = TRUE, filename = NULL)}
 \item{filename}{Name of file where simulation results are to be saved}
 }
 
-\value{An object with 13 elements that can be passed to \code{HAC.simrep}
+\value{A list object of class "HAC" with 13 elements that can be passed to \code{HAC.simrep} as follows:
+
+  \item{input.seqs}{Should a FASTA file of aligned/trimmed DNA sequences be inputted? Default is FALSE}
+  \item{subset.seqs}{Should a subsample of DNA sequences be taken? Default is FALSE}
+  \item{prop.seqs}{Proportion of DNA sequences to subsample. Default is NULL}
+  \item{prop.haps}{Proportion of haplotype labels to subsample. Default is NULL (can be altered by user)}
+  \item{subset.haps}{Should a subsample of haplotype labels be taken? Default is NULL (can be altered by user)}
+  \item{N}{Number of individuals. NA by default (provided by user)}
+  \item{Hstar}{Number of unique species' haplotypes. NA by default (provided by user)}
+  \item{probs}{Haplotype frequency distribution vector. NA by default (provided by user)}
+  \item{p}{Proportion of haplotypes to recover. \code{p} = 0.95 by default.}
+  \item{perms}{Number of permutations (replications). \code{perms} = 10000 by default.}
+  \item{conf.level}{Desired confidence level for graphical output and interval estimation. \code{conf.level} = 0.95 by default.}
+  \item{progress}{Should iteration output be printed to the R console? Default is TRUE}
+  \item{filename}{Name of file where simulation results are to be saved.}
 }
 
 \note{\code{N} must be greater than 1 and greater than or equal to \code{Hstar}.

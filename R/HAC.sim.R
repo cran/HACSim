@@ -3,7 +3,7 @@
 ##########
 
 # Author: Jarrett D. Phillips
-# Last modified: June 3, 2019
+# Last modified: July 14, 2019
 
 ##########
 
@@ -64,7 +64,7 @@ HAC.sim <- function(N,
 		  bf <- base.freq(seqs, all = TRUE)[5:17]
 	  
 		if (any(bf > 0)) {
-      stop("Inputted DNA sequences contain missing and/or ambiguous 
+      warning("Inputted DNA sequences contain missing and/or ambiguous 
 	    nucleotides, which may lead to overestimation of the number of 
 	    observed unique haplotypes. Consider excluding sequences or alignment 
 	    sites containing these data. If missing and/or ambiguous bases occur 
@@ -150,9 +150,10 @@ HAC.sim <- function(N,
 	  
 	## Perform haplotype accumulation ##
     
-	  HAC.mat <- accumulate(pop, specs, perms, K) 
+	  HAC.mat <- accumulate(pop, specs, perms, K)
+	  #HAC.mat <- drop(HAC.mat)
 
-  ## Update progress bar ##
+	  ## Update progress bar ##
     
 	  if (envr$progress == TRUE) {
       utils::setTxtProgressBar(pb, i)
@@ -161,40 +162,48 @@ HAC.sim <- function(N,
 	## Calculate the mean and CI for number of haplotypes recovered over all permutations
 	  
 	  means <- apply(HAC.mat, MARGIN = 2, mean)
-	  sd <- apply(HAC.mat, MARGIN = 2, sd)
+	  #means <- colMeans2(HAC.mat)
+	  sds <- apply(HAC.mat, MARGIN = 2, sd)
+	  #sds <- colSds(HAC.mat)
 	  
-	  lower <- apply(HAC.mat, MARGIN = 2, function(x) quantile(x, (1 - conf.level) / 2)) 
+	  lower <- apply(HAC.mat, MARGIN = 2, function(x) quantile(x, (1 - conf.level) / 2))
+	  #lower <- colQuantiles(HAC.mat, probs = (1 - conf.level) / 2)
 	  upper <- apply(HAC.mat, MARGIN = 2, function(x) quantile(x, (1 + conf.level) / 2))
-	 
+	  #upper <- colQuantiles(HAC.mat, probs = (1 + conf.level) / 2)
+	  
 	## Make data accessible to user ##
 	 
-	  assign("d", data.frame(specs, means, sd), envir = envr)
+	  assign("d", data.frame(specs, means, sds), envir = envr)
 
 	## Compute simple summary statistics and display output ##
 	## tail() is used here instead of max() because curves will not be monotonic if perms is not set high enough. When perms is large (say 10000), tail() is sufficiently close to max()
 	 
 	  P <- tail(means, n = 1)
+	  num <- N * Hstar
+	  num.haps <- length(subset.haps)
 	
 	 if (is.null(subset.haps)) {
 	   Q <- Hstar - P
 	   assign("R", P / Hstar, envir = envr)
-	   S <- (Hstar - P) / Hstar
-	   assign("Nstar", (N * Hstar) / P, envir = envr)
-	   X <- ((N * Hstar) / P) - N
+	   S <- Q / Hstar
+	   assign("Nstar", num / P, envir = envr)
+	   X <- (num / P) - N
 	 } else {
-	   Q <- length(subset.haps) - P
-	   assign("R", P / length(subset.haps), envir = envr)
-	   S <- (length(subset.haps) - P) / length(subset.haps)
-	   assign("Nstar", (N * length(subset.haps)) / P, envir = envr)
-	   X <- ((N * length(subset.haps)) / P) - N
+	   Q <- num.haps - P
+	   assign("R", P / num.haps, envir = envr)
+	   S <- (num.haps - P) / num.haps
+	   assign("Nstar", (N * num.haps) / P, envir = envr)
+	   X <- ((N * num.haps) / P) - N
 	 }
 	  
 	  if (X < 0) {
-	    X <- 0
+	    X <- 0 # to ensure non-negative result
 	  }
+	  
+	  moe <- (qnorm((1 + conf.level) / 2) * (tail(envr$d$sds, n = 1) / tail(envr$d$means, n = 1)) * sqrt(N))
 	 
-	  assign("low", signif(N - {qnorm({1 + conf.level} / 2) * {tail(envr$d$sd, n = 1) / tail(envr$d$means, n = 1)} * sqrt(N)}), envir = envr)
-	  assign("high", signif(N + {qnorm({1 + conf.level} / 2) * {tail(envr$d$sd, n = 1) / tail(envr$d$means, n = 1)} * sqrt(N)}), envir = envr)
+	  assign("low", signif(N - moe), envir = envr)
+	  assign("high", signif(N + moe), envir = envr)
 	
   ## Output results to R console and CSV file ##
 	  if (envr$progress == TRUE) {
@@ -230,6 +239,5 @@ HAC.sim <- function(N,
 	  }
 	  
 	  df[nrow(df) + 1, ] <- c(P, Q, envr$R, S, envr$Nstar, X)
-
 	  df
 } # end HAC.sim
