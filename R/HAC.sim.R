@@ -64,7 +64,7 @@ HAC.sim <- function(N,
 		  bf <- base.freq(seqs, all = TRUE)[5:17]
 	  
 		if (any(bf > 0)) {
-      warning("Inputted DNA sequences contain missing and/or ambiguous 
+      stop("Inputted DNA sequences contain missing and/or ambiguous 
 	    nucleotides, which may lead to overestimation of the number of 
 	    observed unique haplotypes. Consider excluding sequences or alignment 
 	    sites containing these data. If missing and/or ambiguous bases occur 
@@ -110,8 +110,8 @@ HAC.sim <- function(N,
       stop("perms must be greater than 1")
     }
   
-    if (p == 0) {
-      stop("p must be greater than 0")
+    if ((p <= 0) || (p > 1)) {
+      stop("p must be greater than 0 and less than or equal to 1")
     }
   
   ## Set up container to hold the identity of each individual from each permutation ##
@@ -163,13 +163,17 @@ HAC.sim <- function(N,
 	  
 	  means <- apply(HAC.mat, MARGIN = 2, mean)
 	  #means <- colMeans2(HAC.mat)
+	  #means <- colmeans(HAC.mat)
 	  sds <- apply(HAC.mat, MARGIN = 2, sd)
 	  #sds <- colSds(HAC.mat)
+	  #sds <- colVars(HAC.mat, std = TRUE)
 	  
 	  lower <- apply(HAC.mat, MARGIN = 2, function(x) quantile(x, (1 - conf.level) / 2))
 	  #lower <- colQuantiles(HAC.mat, probs = (1 - conf.level) / 2)
+	  #lower <- colQuantile(HAC.mat, probs = (1 - conf.level) / 2)
 	  upper <- apply(HAC.mat, MARGIN = 2, function(x) quantile(x, (1 + conf.level) / 2))
 	  #upper <- colQuantiles(HAC.mat, probs = (1 + conf.level) / 2)
+	  #upper <- colQuantile(HAC.mat, probs = (1 + conf.level) / 2)
 	  
 	## Make data accessible to user ##
 	 
@@ -187,17 +191,17 @@ HAC.sim <- function(N,
 	   assign("R", P / Hstar, envir = envr)
 	   S <- Q / Hstar
 	   assign("Nstar", num / P, envir = envr)
-	   X <- (num / P) - N
+	   assign("X", (num / P) - N, envir = envr)
 	 } else {
 	   Q <- num.haps - P
 	   assign("R", P / num.haps, envir = envr)
 	   S <- (num.haps - P) / num.haps
 	   assign("Nstar", (N * num.haps) / P, envir = envr)
-	   X <- ((N * num.haps) / P) - N
+	   assign("X", ((N * num.haps) / P) - N, envir = envr)
 	 }
 	  
-	  if (X < 0) {
-	    X <- 0 # to ensure non-negative result
+	  if (envr$X < 0) {
+	    envr$X <- 0 # to ensure non-negative result
 	  }
 	  
 	  moe <- (qnorm((1 + conf.level) / 2) * (tail(envr$d$sds, n = 1) / tail(envr$d$means, n = 1)) * sqrt(N))
@@ -213,7 +217,7 @@ HAC.sim <- function(N,
 	        "\n Proportion of haplotypes sampled: " , envr$R, 
 	        "\n Proportion of haplotypes not sampled: " , S,
 	        "\n \n Mean value of N*: ", envr$Nstar,
-	        "\n Mean number of specimens not sampled: ", X)
+	        "\n Mean number of specimens not sampled: ", envr$X)
     
   ## Plot the mean haplotype accumulation curve (averaged over perms number of curves) and haplotype frequency barplot ##
       par(mfrow = c(1, 2))
@@ -238,6 +242,6 @@ HAC.sim <- function(N,
       }
 	  }
 	  
-	  df[nrow(df) + 1, ] <- c(P, Q, envr$R, S, envr$Nstar, X)
+	  df[nrow(df) + 1, ] <- c(P, Q, envr$R, S, envr$Nstar, envr$X)
 	  df
 } # end HAC.sim

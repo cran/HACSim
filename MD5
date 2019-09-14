@@ -1,11 +1,11 @@
-0733de136669e8ee333683b6af2feb38 *DESCRIPTION
+b354e30f89e71ac0b95afc4db86fdcd7 *DESCRIPTION
 7742bfeb1b6f93b122f66e892db3fc7e *NAMESPACE
 d76f255f9e9099a4c331e46aeb4626ce *R/HAC.object.R
-03dfcf16412bdbeacc13433bf243feac *R/HAC.sim.R
-61bd352de5e7168eb0721cb140f715c6 *R/HAC.simrep.R
+0bddc4eb72834d540d8c6f9aac6575d9 *R/HAC.sim.R
+19ca67b679b5d7b8e8f26e9c64e659d7 *R/HAC.simrep.R
 8afb4bf5691029cd41ea83e229b4030d *R/RcppExports.R
-1547087f91ac555fb39c99be4ee430e7 *R/zzz.R
-4293b9d2b59fde1e68167b0738d0c93e *build/partial.rdb
+884ae98733a8d0e177315337dda3ca1b *R/zzz.R
+82e4485c8d1abac198f81b4301dc29c0 *build/partial.rdb
 21b38be82934c915752eced2746b9385 *man/HAC.sim.Rd
 f6ff3aee965cb20f99051bbd0b974a4c *man/HAC.simrep.Rd
 4e5dbbcd722356118d7526099aecd93c *man/HACClass.Rd
