@@ -6,13 +6,14 @@
 \description{Helper function which creates an object containing necessary information to run a simulation of haplotype accumulation for a real species of interest}
 
 \usage{HACReal(perms = 10000, p = 0.95, conf.level = 0.95, 
-subsample = FALSE, prop = NULL, progress = TRUE, filename = NULL)}
+subsample = FALSE, prop = NULL, progress = TRUE, num.iters = NULL, filename = NULL)}
 
 \arguments{\item{perms}{Number of permutations (replications)}
 \item{p}{Proportion of haplotypes to recover}
 \item{conf.level}{Desired confidence level for graphical output and interval estimation}
 \item{subsample}{Is a subsample of DNA sequences desired?}
 \item{prop}{If subsample = TRUE, the proportion of DNA sequences to subsample}
+\item{num.iters}{Number of iterations to compute}
 \item{progress}{Should iteration output be printed to the R console?}
 \item{filename}{Name of file where simulation results are to be saved}
 }
@@ -30,6 +31,7 @@ subsample = FALSE, prop = NULL, progress = TRUE, filename = NULL)}
   \item{p}{Proportion of haplotypes to recover. \code{p} = 0.95 by default.}
   \item{perms}{Number of permutations (replications). \code{perms} = 10000 by default.}
   \item{conf.level}{Desired confidence level for graphical output and interval estimation. \code{conf.level} = 0.95 by default.}
+    \item{num.iters}{Number of iterations to compute. \code{num.iters = NULL} by default (i.e., all iterations are computed; users can specify \code{num.iters} = 1 for the first iteration.)}
   \item{progress}{Should iteration output be printed to the R console? Default is TRUE}
   \item{filename}{Name of file where simulation results are to be saved.}
 
@@ -47,5 +49,5 @@ subsample = FALSE, prop = NULL, progress = TRUE, filename = NULL)}
     
     ## Simulate real species and all parameters changed - subsampling ##
     HACSObj <- HACReal(perms = 10000, p = 0.90, subsample = TRUE, 
-    prop = 0.15, conf.level = 0.99, filename = "output")
+    prop = 0.15, conf.level = 0.99, num.iters = 1, filename = "output")
 }

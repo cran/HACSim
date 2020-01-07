@@ -7,7 +7,7 @@
 
 \usage{HACHypothetical(N, Hstar, probs, perms = 10000, p = 0.95, 
 conf.level = 0.95, subsample = FALSE, prop = NULL,
-progress = TRUE, filename = NULL)}
+progress = TRUE, num.iters = NULL, filename = NULL)}
 
 \arguments{\item{N}{Number of individuals}
 \item{Hstar}{Number of unique species' haplotypes}
@@ -17,6 +17,7 @@ progress = TRUE, filename = NULL)}
 \item{conf.level}{Desired confidence level for graphical output and interval estimation}
 \item{subsample}{Is a subsample of haplotype labels desired?}
 \item{prop}{If subsample = TRUE, the proportion of haplotype labels to subsample}
+\item{num.iters}{Number of iterations to compute}
 \item{progress}{Should iteration output be printed to the R console?}
 \item{filename}{Name of file where simulation results are to be saved}
 }
@@ -34,6 +35,7 @@ progress = TRUE, filename = NULL)}
   \item{p}{Proportion of haplotypes to recover. \code{p} = 0.95 by default.}
   \item{perms}{Number of permutations (replications). \code{perms} = 10000 by default.}
   \item{conf.level}{Desired confidence level for graphical output and interval estimation. \code{conf.level} = 0.95 by default.}
+  \item{num.iters}{Number of iterations to compute. \code{num.iters = NULL} by default (i.e., all iterations are computed; users can specify \code{num.iters} = 1 for the first iteration.)}
   \item{progress}{Should iteration output be printed to the R console? Default is TRUE}
   \item{filename}{Name of file where simulation results are to be saved.}
 }
@@ -63,6 +65,6 @@ progress = TRUE, filename = NULL)}
   ## Simulate hypothetical species and all paramaters changed - subsampling ##
   HACSObj <- HACHypothetical(N = N, Hstar = Hstar, probs = probs, 
   perms = 10000, p = 0.90, subsample = TRUE, prop = 0.15, conf.level = 0.95, 
-  filename = "output")
+  num.iters = 1, filename = "output")
   }
   

@@ -18,6 +18,7 @@
 \item{low}{The upper endpoint of the desired level confidence interval for the 'true' required sample size}
 \item{N}{The starting sample size used to initialize the algorithm}
 \item{Nstar}{The final (extrapolated) sample size}
+  \item{num.iters}{Number of iterations to compute. \code{num.iters = NULL} by default (i.e., all iterations are computed; users can specify \code{num.iters} = 1 for the first iteration.)}
 \item{p}{The user-specified level of haplotype recovery. Default is \code{p} = 0.95.}
 \item{perms}{The user-specified number of permutations (replications). Default is \code{perms} = 10000.}
 \item{probs}{Haplotype frequency distribution vector}
