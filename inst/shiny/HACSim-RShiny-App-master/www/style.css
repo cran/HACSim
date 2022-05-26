@@ -1,0 +1,89 @@
+
+:root {
+  /* Fonts */
+  --text-font-family: "Times New Roman";
+  --text-font-base: serif;
+  --base-font-size: 20px;
+  --base-weight: 400;
+  --heavy-weight: 700;
+
+  /* Colours */
+  --text-color: #2E3438;
+  --background-color: #FFFFFF;
+  --primary-color: #00807A;
+  --link-color: #00CCC3;
+  --white: #FFFFFF;
+}
+
+/* Set everything to Corben font, with serif as a fallback, and set the colour and size */
+* {
+  font-family: var(--text-font-family), var(--text-font-base);
+  font-size: var(--base-font-size);
+  color: var(--text-color);
+}
+/* Heavier headers */
+h1,h2, h3, h4, h5, h6 {
+  font-weight: var(--heavy-weight);
+}
+
+/* Link colour and hover */
+a {
+  color: var(--primary-color);
+}
+
+a:hover {
+  color: var(--link-color);
+}
+
+/* Make nav bar links uppercase and heavier weight */
+.navbar-default .navbar-nav > li > a {
+  font-weight: var(--heavy-weight);
+  color: var(--text-color);
+}
+
+/* Change to primary colour on hover, make active tab navbar link primary colour, and add no additional background to all */
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:focus, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .open > a:hover {
+  color: #FFFFFF;
+  background-color: transparent;
+}
+
+.navbar-default .navbar-nav > li > a {
+  line-height: 20px;
+}
+
+/* Remove background from navbar, set bottom border and mock header */
+.navbar-default {
+  background: rgb(14,202,204);
+background: linear-gradient(0deg, rgba(14,202,204,0) 23%, rgba(0,0,0,0.7959558823529411) 100%);
+  border:none;
+}
+
+/* Push navbar links to the right */
+.navbar-nav {
+  float: right;
+}
+
+#mycarousel {
+  position: fixed; 
+  left: 0; 
+  top: 0;
+  z-index: -1;
+}
+
+#mycarousel li { visibility: hidden; }
+
+.bg {
+  /* The image used */
+  background-image: url("img_girl.jpg");
+
+  /* Full height */
+  height: 100%; 
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+
+

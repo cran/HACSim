@@ -1,37 +1,44 @@
-### HACSim: Haplotype Accumulation Curve Simulator ###
+##########################################################
+##### HACSim: Haplotype Accumulation Curve Simulator #####
+##########################################################
+
+##### 
+
+# HACSim is a nonparametric stochastic iterative local search optimization algorithm
+# for the extrapolation of species' haplotype accumulation curves to assess likely 
+# required specimen sample sizes for genetic diversity assessment                    
+
+#####
 
 ##########
 
 # Author: Jarrett D. Phillips
-# Last modified: December 21, 2019
-
-##########
+# Last modified: December 22, 2020
 
 ## Best run in RStudio ##
 ## DO NOT change order of code (can throw errors)! ##
 
-#####
+##########
 
-## Input parameters ###
+### Input parameters ###
 
-# Required #
+## Required ##
 
 # N = Number of specimens (DNA sequences)
 # Hstar = Number of observed unique haplotypes
 # probs = Probability frequency distribution of haplotypes
 
-# Optional #
+## Optional ##
 
-# p = Proportion of unique haplotypes to recover
-# perms = Number of permutations (replications)
-# input.seqs = Analyze inputted aligned/trimmed FASTA DNA sequence file (TRUE / FALSE)?
-# subset.seqs = Subset of DNA sequences to sample
-# prop.seqs = Proportion of DNA sequences to sample
-# prop.haps = Proportion of haplotypes to sample
-# subset.haps = Subset of haplotypes to sample
+# p = Proportion (in (0, 1]) of unique haplotypes to recover - 0.95 (95%) by default
+# perms = Number of permutations (replications) (in (1, inf)) - 10000 by default
+# subsample = Should a subsample of DNA sequences or haplotype be taken? (TRUE or FALSE)
+# prop = Proportion (in (0, 1]) of DNA sequences or haplotypes to sample (not used if subsample = FALSE)
 # conf.level = Confidence level for accumulation curve and confidence intervals
+# conf.type = Typpe of CI to compute and plot ("quantile" or "asymptotic")
 # num.iters = Number of iterations to perform (1 or NULL (i.e., all))
-# progress = Print results to console (TRUE / FALSE)
+# progress = Print results to console (TRUE or FALSE)
+# filename = Name of temporary file in which to save results (NULL by default)
 
 #####
 
@@ -47,9 +54,13 @@ HAC.sim <- function(N,
                     subset.seqs = FALSE,
                     prop.seqs = NULL,
                     conf.level = 0.95,
+                    ci.type = "quantile",
                     df = NULL, # dataframe
                     num.iters = NULL,
                     progress = TRUE) {
+  
+  ## Number of iterations to run ##
+  
   if ((is.null(num.iters)) || (num.iters == 1)) {
     cat("\n \n")
 
@@ -60,11 +71,12 @@ HAC.sim <- function(N,
     }
 
     ## Load DNA sequence data and set N, Hstar and probs ##
-
+    
     if (input.seqs == TRUE) {
+      
       seqs <- read.dna(file = file.choose(), format = "fasta")
-
-      bf <- base.freq(seqs, all = TRUE)[5:17]
+        
+      bf <- base.freq(seqs, all = TRUE)[5:17] # frequencies of IUPAC codes, Ns, gaps and missing bases
 
       if (any(bf > 0)) {
         warning("Inputted DNA sequences contain missing and/or ambiguous 
@@ -74,12 +86,14 @@ HAC.sim <- function(N,
 	    at the ends of sequences, further alignment trimming is an option.")
       }
 
-      assign("ptm", proc.time(), envir = envr)
+      assign("ptm", proc.time(), envir = envr) # set timer
+      
+      # take random subset of sequences (e.g., prop.seqs = 0.10 (10%))
 
-      if (subset.seqs == TRUE) { # take random subset of sequences (e.g., prop.seqs = 0.10 (10%))
+      if (subset.seqs == TRUE) { 
         seqs <- seqs[sample(nrow(seqs), size = ceiling(prop.seqs * nrow(seqs)), replace = FALSE), ]
         seqsfile <- tempfile(fileext = ".fas")
-        write.dna(seqs, file = seqsfile, format = "fasta")
+        write.dna(seqs, file = seqsfile)
       }
 
       assign("N", dim(seqs)[[1]], envir = envr)
@@ -106,8 +120,12 @@ HAC.sim <- function(N,
     if (!isTRUE(all.equal(1, sum(probs), tolerance = .Machine$double.eps^0.25))) {
       stop("probs must sum to 1")
     }
+    
+    if (length(probs) != Hstar) {
+      stop("probs must have Hstar elements")
+    }
 
-    if (perms == 1) {
+    if ((perms == 0) || (perms == 1)) {
       stop("perms must be greater than 1")
     }
 
@@ -143,74 +161,83 @@ HAC.sim <- function(N,
       }
     }
 
-    pop <- array(dim = c(perms, num.specs, K))
-
+    pop <- array(dim = c(perms, num.specs, K)) # preallocate array
+    
     for (i in 1:K) {
-      pop[, , i] <- replicate(perms, gen.perms())
+      pop[, , i] <- replicate(perms, gen.perms()) # fill array
     }
-
+    
     ## Perform haplotype accumulation ##
+    
+    # Custom C++ function selects one permutation (row) in pop array, 
+    # then selects individuals in a random order and samples haplotypes for that permutation 
 
-    HAC.mat <- accumulate(pop, specs, perms, K)
-    # HAC.mat <- drop(HAC.mat)
-
-    ## Update progress bar ##
-
+    HAC.mat <- accumulate(pop, specs, perms, K) 
+    HAC.mat <- drop(HAC.mat) # drop array dimension
+    
     if (progress == TRUE) {
       utils::setTxtProgressBar(pb, i)
     }
 
-    ## Calculate the mean and CI for number of haplotypes recovered over all permutations
+    ## Calculate the mean, sd and CI (based on sample quantiles) for number of haplotypes recovered over all permutations
 
-    means <- apply(HAC.mat, MARGIN = 2, mean)
-    # means <- colMeans2(HAC.mat)
+    # means <- apply(HAC.mat, MARGIN = 2, mean)
+    means <- colMeans2(HAC.mat)
     # means <- colmeans(HAC.mat)
-    sds <- apply(HAC.mat, MARGIN = 2, sd)
-    # sds <- colSds(HAC.mat)
+    # sds <- apply(HAC.mat, MARGIN = 2, sd)
+    sds <- colSds(HAC.mat)
     # sds <- colVars(HAC.mat, std = TRUE)
-
-    lower <- apply(HAC.mat, MARGIN = 2, function(x) quantile(x, (1 - conf.level) / 2))
-    # lower <- colQuantiles(HAC.mat, probs = (1 - conf.level) / 2)
+    
+    # lower <- apply(HAC.mat, MARGIN = 2, function(x) quantile(x, (1 - conf.level) / 2))
+    lower <- colQuantiles(HAC.mat, probs = (1 - conf.level) / 2)
     # lower <- colQuantile(HAC.mat, probs = (1 - conf.level) / 2)
-    upper <- apply(HAC.mat, MARGIN = 2, function(x) quantile(x, (1 + conf.level) / 2))
-    # upper <- colQuantiles(HAC.mat, probs = (1 + conf.level) / 2)
+    # upper <- apply(HAC.mat, MARGIN = 2, function(x) quantile(x, (1 + conf.level) / 2))
+    upper <- colQuantiles(HAC.mat, probs = (1 + conf.level) / 2)
     # upper <- colQuantile(HAC.mat, probs = (1 + conf.level) / 2)
-
+    
     ## Make data accessible to user ##
-
+    
     assign("d", data.frame(specs, means, sds), envir = envr)
-
+    
+    # Compute CIs for fraction of haplotypes sampled
+    
+    assign("R.low", (envr$d$means - qnorm((1 + envr$conf.level) / 2) * (envr$d$sds / sqrt(length(envr$d$specs)))) / envr$Hstar, envir = envr)
+    assign("R.high", (envr$d$means + qnorm((1 + envr$conf.level) / 2) * (envr$d$sds / sqrt(length(envr$d$specs)))) / envr$Hstar, envir = envr)
+    
     ## Compute simple summary statistics and display output ##
-    ## tail() is used here instead of max() because curves will not be monotonic if perms is not set high enough. When perms is large (say 10000), tail() is sufficiently close to max()
-
+    
+    # tail() is used here instead of max() because curves will not be monotonic if perms is not set high enough. 
+    # When perms is large (say 10000), tail() is sufficiently close to max().
+    
+    # Cache values for easy referencing 
+    
     P <- tail(means, n = 1)
-    num <- N * Hstar
+    num1 <- N * Hstar
     num.haps <- length(subset.haps)
+    num2 <- N * num.haps
+    
+    # Measures of Sampling Closeness #
 
     if (is.null(subset.haps)) {
       Q <- Hstar - P
       assign("R", P / Hstar, envir = envr)
       S <- Q / Hstar
-      assign("Nstar", num / P, envir = envr)
-      assign("X", (num / P) - N, envir = envr)
+      assign("Nstar", num1 / P, envir = envr)
+      assign("X", (num1 / P) - N, envir = envr)
     } else {
       Q <- num.haps - P
       assign("R", P / num.haps, envir = envr)
       S <- Q / num.haps
-      assign("Nstar", (N * num.haps) / P, envir = envr)
-      assign("X", ((N * num.haps) / P) - N, envir = envr)
+      assign("Nstar", num2 / P, envir = envr)
+      assign("X", (num2 / P) - N, envir = envr)
     }
 
     if (envr$X < 0) {
       envr$X <- 0 # to ensure non-negative result
     }
 
-    moe <- (qnorm((1 + conf.level) / 2) * (tail(envr$d$sds, n = 1) / tail(envr$d$means, n = 1)) * sqrt(N))
-
-    assign("low", signif(N - moe), envir = envr)
-    assign("high", signif(N + moe), envir = envr)
-
     ## Output results to R console and CSV file ##
+    
     if (progress == TRUE) {
       cat(
         "\n \n --- Measures of Sampling Closeness --- \n \n",
@@ -221,8 +248,21 @@ HAC.sim <- function(N,
         "\n \n Mean value of N*: ", envr$Nstar,
         "\n Mean number of specimens not sampled: ", envr$X
       )
+      
+      ## Compute asymptotic confidence interval endpoints and margin of error (MOE) for N* (based on delta method)
+      
+      MOE <- (qnorm((1 + envr$conf.level) / 2) * (tail(envr$d$sds, n = 1) / tail(envr$d$means, n = 1)) * sqrt(N))
+      
+      if (envr$iters == 1) {
+        assign("Nstar.low", N, envir = envr)
+        assign("Nstar.high", N, envir = envr)
+      } else {
+        assign("Nstar.low", signif(N - MOE), envir = envr)
+        assign("Nstar.high", signif(N + MOE), envir = envr)
+      }
 
       ## Plot the mean haplotype accumulation curve (averaged over perms number of curves) and haplotype frequency barplot ##
+      
       par(mfrow = c(1, 2))
       
       if (is.null(subset.haps)) {
@@ -231,7 +271,14 @@ HAC.sim <- function(N,
         plot(specs, means, type = "n", xlab = "Specimens sampled", ylab = "Unique haplotypes", ylim = c(1, length(subset.haps)), main = "Haplotype accumulation curve")
       }
       
-      polygon(x = c(specs, rev(specs)), y = c(lower, rev(upper)), col = "gray")
+      if (ci.type == "quantile") {
+        polygon(x = c(specs, rev(specs)), y = c(lower, rev(upper)), col = "gray")
+      } 
+      
+      if (ci.type == "asymptotic") {
+        polygon(x = c(specs, rev(specs)), y = c(envr$R.low * envr$Hstar, rev(envr$R.high * envr$Hstar)), col = "gray")
+      }
+      
       lines(specs, means, lwd = 2)
       
       if (is.null(subset.haps)) {
@@ -245,7 +292,10 @@ HAC.sim <- function(N,
       }
     }
 
+    # Output summary statistics to dataframe (df)
+    
     df[nrow(df) + 1, ] <- c(P, Q, envr$R, S, envr$Nstar, envr$X)
     df
   }
+
 } # end HAC.sim
