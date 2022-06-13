@@ -10,7 +10,7 @@ when \code{HACSim} is loaded.
 \value{When a simulation is run via \code{HAC.simrep}, \code{envr} will contain 
 26 elements as follows:
 
-\item{ci.type}{Type of confidence interval to compute and plot. Defaul is 
+\item{ci.type}{Type of confidence interval to compute and plot. Default is 
 \code{conf.type = "quantile"}.}
 \item{conf.level}{The desired confidence level. Default is 
 \code{conf.level = 0.95}.}

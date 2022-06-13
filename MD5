@@ -1,4 +1,4 @@
-dae7b80951d5776071a628d01744fd0f *DESCRIPTION
+54ade0bbe14821788886dfe369f78de3 *DESCRIPTION
 e47453939e418b7720539419d46e3f50 *NAMESPACE
 5ce3fec172392e165e7f45208bfdcc7c *R/HAC.object.R
 5f79a93d8b152c97546c96ef4c6db93d *R/HAC.sim.R
@@ -6,9 +6,10 @@ b59a9ac57f769986bc303f20dc60b542 *R/HAC.simrep.R
 8afb4bf5691029cd41ea83e229b4030d *R/RcppExports.R
 53ada616819f36ad3ba74d3b7cf13a67 *R/launchApp.R
 484fe318660a67c22a70d079e613cf90 *R/sim.seqs.R
-34f183557cd845e5d0d4df723783dbdb *R/zzz.R
-77e09c1cd40dc4c51251811a2c738ea0 *build/partial.rdb
+82e5f91c987a136209bd2c3f89eb941d *R/zzz.R
+75f4994f677350d02aa6a8b82f5c0850 *build/partial.rdb
 2aff3e5d89ee9b21f8c24d3e26bef142 *inst/shiny/HACSim-RShiny-App-master/app.R
+9026b55dfa1efd6f23f00abad5f277cf *inst/shiny/HACSim-RShiny-App-master/rsconnect/shinyapps.io/jphill01/HACSim.dcf
 1c7c688638004713629b257022a73226 *inst/shiny/HACSim-RShiny-App-master/server.R
 4155122d58cfb2cf20256c6e8b618614 *inst/shiny/HACSim-RShiny-App-master/tutorial.html
 d42a638ab5be49cea39196a929e34507 *inst/shiny/HACSim-RShiny-App-master/ui.R
@@ -32,9 +33,9 @@ bb2cf116a2a344a96dad450178c2f97c *man/HACHypothetical.Rd
 76c6d2a1e0ace42cd403deebd90c4072 *man/HACReal.Rd
 2fbdd60463ec59dc2d0b16cdf2cf1b30 *man/HACSim-package.Rd
 d47bf3b9176a0135c188a5c56c6c76bd *man/accumulate.Rd
-a94e3a761199c05417a9f54022698147 *man/envr.Rd
+4b23584d9b0cc570eaf633bee953b8e7 *man/envr.Rd
 b7b7507433c0a391df0655ca0d47647c *man/launchApp.Rd
-31e6507f76771daa7a1659a6ca6c251f *man/sim.seqs.Rd
+7943f2e4f670c2742c66cf2b006f26b0 *man/sim.seqs.Rd
 61059660eb073d93e00e8ee054237071 *src/Makevars
 61059660eb073d93e00e8ee054237071 *src/Makevars.win
 d4d834c897f4ca7d807bd910c10f6e05 *src/RcppExports.cpp

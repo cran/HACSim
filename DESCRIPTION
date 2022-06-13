@@ -2,7 +2,7 @@ Package: HACSim
 Type: Package
 Title: Iterative Extrapolation of Species' Haplotype Accumulation
         Curves for Genetic Diversity Assessment
-Version: 1.0.6
+Version: 1.0.6-1
 Date: 2022-05-23
 Author: Jarrett D. Phillips [aut, cre], 
         Steven H. French [ctb], Navdeep Singh [ctb]
@@ -18,6 +18,6 @@ Imports: ape (>= 5.3), data.table (>= 1.12.8), graphics (>= 3.6.1),
         shiny (>= 1.6.0), stats (>= 3.6.1), utils (>= 3.6.1)
 LinkingTo: Rcpp, RcppArmadillo
 RoxygenNote: 6.1.1
-Packaged: 2022-05-26 02:40:25 UTC; jarrettphillips
+Packaged: 2022-06-13 00:18:40 UTC; jarrettphillips
 Repository: CRAN
-Date/Publication: 2022-05-26 14:30:10 UTC
+Date/Publication: 2022-06-13 06:50:16 UTC

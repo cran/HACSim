@@ -13,6 +13,8 @@ models:
   \item Hasegawa-Kishino-Yano (1985)
 }
 
+Output can then be passed to \code{HACReal()}.
+
 }
 
 \usage{sim.seqs(num.seqs, num.haps, length.seqs, count.haps, nucl.freqs, 
@@ -71,17 +73,18 @@ mu.rate, transi.rate, transv.rate)}
 num.seqs <- 100 # number of DNA sequences
 num.haps <- 10 # number of haplotypes
 length.seqs <- 658 # length of DNA sequences
-count.haps <- c(60, rep(10, 2), rep(5, 2), rep(1, 5)) # haplotype frequency distribution
+count.haps <- c(65, rep(10, 2), rep(5, 2), rep(1, 5)) # haplotype frequency distribution
 nucl.freqs <- rep(0.25, 4) # nucleotide frequency distribution
-codon.tbl <- "vertebrate mitochondrial"
 subst.model <- "JC69" # desired nucleotide substitution model
+codon.tbl <- "vertebrate mitochondrial"
 mu.rate <- 1e-3 # mutation rate
 transi.rate <- NULL # transition rate
 transv.rate <- NULL # transversion rate
 
 sim.seqs(num.seqs = num.seqs, num.haps = num.haps, length.seqs = length.seqs, 
-count.haps = count.haps, nucl.freqs = nucl.freqs, subst.model = subst.model, 
-codon.tbl = codon.tbl, transi.rate = transi.rate, transv.rate = transv.rate)
+count.haps = count.haps, nucl.freqs = nucl.freqs, codon.tbl = codon.tbl, 
+subst.model = subst.model, mu.rate = mu.rate, transi.rate = transi.rate, 
+transv.rate = transv.rate)
 
 }
 
