@@ -75,6 +75,7 @@ HAC.sim <- function(N,
     if (input.seqs == TRUE) {
       
       seqs <- read.dna(file = file.choose(), format = "fasta")
+    
         
       bf <- base.freq(seqs, all = TRUE)[5:17] # frequencies of IUPAC codes, Ns, gaps and missing bases
 
@@ -101,7 +102,7 @@ HAC.sim <- function(N,
       rownames(h) <- 1:nrow(h)
       assign("Hstar", dim(h)[[1]], envir = envr)
       assign("probs", lengths(attr(h, "index")) / N, envir = envr)
-    }
+    } 
 
     ## Error messages ##
 

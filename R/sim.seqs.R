@@ -168,7 +168,7 @@ sim.seqs <- function(num.seqs,
     seqs
   }
   
-  # Generate num.seqs random DNA sequences from "seed"sequence based on desired nucleotide substitution model
+  # Generate num.seqs random DNA sequences from "seed" sequence based on desired nucleotide substitution model
   seqs <- matrix(replicate(num.seqs, duplicate.seq(seqs)), byrow = TRUE, nrow = num.seqs)
   
   # Randomly sample generated DNA sequences based on haplotype frequency distribution
